@@ -1,14 +1,15 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Introduction from "@/components/Introduction";
 import WeddingExperiences from "@/components/WeddingExperiences";
-import PlanningServices from "@/components/PlanningServices";
-import PlanningProcess from "@/components/PlanningProcess";
+import PitchComparison from "@/components/PitchComparison";
+import PitchPackages from "@/components/PitchPackages";
+import ScheduleForm from "@/components/ScheduleForm";
 import InspirationGallery from "@/components/InspirationGallery";
-import ConsultationCTA from "@/components/ConsultationCTA";
+import Testimonials from "@/components/Testimonials";
 import EnquiryForm from "@/components/EnquiryForm";
-import BookingSection from "@/components/BookingSection";
+import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
+import ExitIntentModal from "@/components/ExitIntentModal";
 
 export default function Home() {
   return (
@@ -16,16 +17,17 @@ export default function Home() {
       <Header />
       <main id="main-content">
         <Hero />
-        <Introduction />
         <WeddingExperiences />
-        <PlanningServices />
-        <PlanningProcess />
+        <PitchComparison />
+        <PitchPackages />
+        <ScheduleForm />
         <InspirationGallery />
-        <ConsultationCTA />
+        <Testimonials />
         <EnquiryForm />
-        <BookingSection />
+        <NewsletterSection />
       </main>
       <Footer />
+      <ExitIntentModal />
     </>
   );
 }

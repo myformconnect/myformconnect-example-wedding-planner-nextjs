@@ -1,21 +1,18 @@
-/**
- * Aurelle Weddings — Central Site Configuration
- * Contains editable brand details, navigation, content matrices,
- * and integration configurations for MyFormCapture & MyFormConnect.
- */
+// Aurelle Weddings — site content, packages, and integration settings
+
 
 export const siteConfig = {
   brand: {
     name: "Aurelle Weddings",
-    tagline: "Thoughtfully Curated Celebrations",
-    headline: "A celebration of your story, crafted to last a lifetime.",
+    tagline: "Bespoke Luxury Wedding Atelier",
+    seasonBadge: "Accepting Limited 2026–2027 Dates • 12 Celebrations Annually",
+    headline: "We Design Royal Celebrations That Feel Unmistakably Yours.",
     subheadline:
-      "From timeless Indian traditions to intimate destination celebrations, we bring every detail together to create a wedding that feels unmistakably yours.",
+      "Enjoy every moment of your celebration without the stress of multi-day logistics, vendor negotiations, or last-minute panic. From historic royal palaces to sunlit beachfront vows, our team handles every detail—so you arrive as guests of honor at your own wedding.",
     editorialPhilosophyHeading: "Every love story deserves its own setting.",
     editorialPhilosophyText:
-      "We believe exceptional weddings are built around people, traditions, thoughtful design, and the moments that matter most. Our approach combines considered planning with personal details to create celebrations that feel effortless and meaningful.",
-    copyright: "© 2026 Aurelle Weddings. All rights reserved.",
-    // Clearly labelled placeholders for contact details
+      "We believe exceptional weddings are built around meaningful moments, timeless traditions, and effortless beauty. We combine thoughtful planning with personal touches so you and your families can celebrate with total peace of mind.",
+    copyright: "© 2026 Aurelle Weddings Atelier. All rights reserved.",
     contact: {
       emailPlaceholder: "concierge@aurelleweddings.com",
       phonePlaceholder: "+91 (0) 141 289 4500",
@@ -25,98 +22,213 @@ export const siteConfig = {
     },
   },
 
-  navigation: [
-    { label: "Home", href: "#hero" },
-    { label: "Our Services", href: "#services" },
-    { label: "Wedding Experiences", href: "#experiences" },
-    { label: "Our Approach", href: "#approach" },
-    { label: "Contact", href: "#contact" },
+  // Proof numbers under hero
+  metrics: [
+    { value: "120+", label: "Luxury Weddings Produced" },
+    { value: "12", label: "Exclusive Weddings Hosted Per Year" },
+    { value: "100%", label: "Direct Wholesale Vendor Billing" },
+    { value: "4.98 / 5", label: "Couple & Family Satisfaction" },
+  ],
+
+  // Featured press
+  featuredIn: [
+    "Vogue Weddings",
+    "Harper's Bazaar Bride",
+    "Architectural Digest",
+    "WedMeGood",
+    "Brides Today",
+  ],
+
+  // Traditional struggles vs our approach
+  pitchComparison: [
+    {
+      problem: "350+ stressful hours coordinating dozens of separate vendors across decor, sound, hospitality, and rituals.",
+      solution: "A dedicated Lead Wedding Director and an on-site master production team handling every single detail.",
+    },
+    {
+      problem: "Hidden commission markups, surprise vendor fees, and sudden budget overruns.",
+      solution: "100% direct vendor billing with zero hidden fees and transparent weekly budget reports.",
+    },
+    {
+      problem: "Second-guessing how stage decor, lighting, and florals will actually look until the wedding day.",
+      solution: "Photorealistic 3D stage and venue previews before a single contract is signed or flower ordered.",
+    },
+    {
+      problem: "Family members exhausted from coordinating guest airport cabs, hotel rooms, and missing key ceremonies.",
+      solution: "White-glove 24/7 guest hospitality desk, airport charter transfers, and personal luggage valets.",
+    },
+  ],
+
+  // Wedding packages
+  packages: [
+    {
+      id: "royal-heritage",
+      badge: "Signature Collection",
+      title: "Royal Heritage Palace Wedding",
+      duration: "3 to 4 Days • 200–800 Guests",
+      idealFor: "Palace celebrations in Jaipur, Udaipur, Jodhpur, or Jaisalmer",
+      description:
+        "Our flagship celebration: multi-day royal festivities featuring custom mandap architecture, top live musical artists, grand royal baraat coordination, and curated multi-course dining.",
+      highlights: [
+        "Full palace buyout management & royal protocol coordination",
+        "Photorealistic 3D venue design for Sangeet, Mehendi, Wedding & Reception",
+        "Celebrity & traditional folk artist bookings & concert-grade sound",
+        "Dedicated guest concierge for airport transfers & welcome hampers",
+        "On-site master team of 12+ wedding coordinators across all days",
+      ],
+      ctaText: "Check Palace Dates",
+      ctaHref: "#schedule",
+    },
+    {
+      id: "bespoke-destination",
+      badge: "Destination Elite",
+      title: "Coastal & International Destination",
+      duration: "2 to 3 Days • 80–250 Guests",
+      idealFor: "Goa, Thailand, Lake Como, Dubai, or Bali",
+      description:
+        "Turnkey destination celebrations blending relaxed resort luxury with world-class aesthetics. We handle international logistics, guest flight tracking, beachfront licensing, and unforgettable dinner parties.",
+      highlights: [
+        "Full destination venue scouting & private resort buyout management",
+        "Sunset beach & cliffside ceremony production",
+        "Cross-border vendor coordination & international hospitality team",
+        "Personalized digital guest itineraries & travel concierge",
+        "Day-after recovery brunch & twilight catamaran cocktail party",
+      ],
+      ctaText: "Check Destination Dates",
+      ctaHref: "#schedule",
+    },
+    {
+      id: "intimate-atelier",
+      badge: "Artisanal & Curated",
+      title: "Intimate Estate & Vineyard Celebration",
+      duration: "1 to 2 Days • 30–100 Guests",
+      idealFor: "Heritage havelis, private vineyard retreats & family estates",
+      description:
+        "Designed for couples who desire an intimate, heartwarming celebration focusing on farm-to-table culinary tasting menus, heirloom floral artistry, and deep connection with their closest circle.",
+      highlights: [
+        "Custom tablescapes, hand-calligraphy stationery & signature scents",
+        "Candlelit garden dining & chef-curated tasting menus",
+        "Live acoustic chamber & classical musicians",
+        "Documentary-style wedding photography & cinematography direction",
+        "Personalized planning directly with our founding director",
+      ],
+      ctaText: "Check Estate Dates",
+      ctaHref: "#schedule",
+    },
+  ],
+
+  // Couple testimonials
+  testimonials: [
+    {
+      quote:
+        "Aurelle orchestrated our 3-day royal celebration in Udaipur with complete perfection. From welcoming 400 guests to the breathtaking floating mandap, Kabir and I didn't worry for even one second. Our families actually enjoyed every moment!",
+      couple: "Ananya & Kabir Singhania",
+      venue: "Taj Lake Palace & Jagmandir Island, Udaipur",
+      rating: 5,
+      weddingType: "Royal Destination Wedding",
+    },
+    {
+      quote:
+        "We live in London and were planning a destination wedding in Goa. Aurelle’s transparent budget tracking, 3D decor renders, and quick WhatsApp communication gave us 100% peace of mind. The decor was breathtaking.",
+      couple: "Sophie & Rohan Mehra",
+      venue: "The Leela Beachfront, South Goa",
+      rating: 5,
+      weddingType: "Coastal Destination Celebration",
+    },
+    {
+      quote:
+        "Their direct vendor billing policy saved us over 20% on production while delivering floral decor and lighting that stunned all our guests. Hiring Aurelle was hands down the best investment we made for our wedding.",
+      couple: "Devika & Siddharth Kapoor",
+      venue: "Samode Palace, Jaipur",
+      rating: 5,
+      weddingType: "Heritage Royal Celebration",
+    },
   ],
 
   experiences: [
     {
       id: "indian-weddings",
-      title: "Indian Weddings",
+      title: "Royal Indian Weddings",
       description:
-        "Traditional ceremonies, contemporary styling, cultural rituals, and thoughtful coordination across wedding festivities.",
+        "Opulent palace settings, timeless cultural rituals, bespoke mandap architecture, and vibrant multi-day sangeet festivities.",
       image: "/images/exp-indian-weddings.jpg",
       alt: "Lavish royal Indian wedding ceremony under an antique floral mandap with varmala garlands",
-      formValue: "Indian wedding",
-    },
-    {
-      id: "western-weddings",
-      title: "Western Weddings",
-      description:
-        "Elegant ceremonies, refined receptions, floral styling, and carefully coordinated celebrations.",
-      image: "/images/exp-western-weddings.jpg",
-      alt: "Refined outdoor Western wedding ceremony surrounded by garden greenery and delicate white florals",
-      formValue: "Western wedding",
+      formValue: "Royal Indian Palace Wedding",
     },
     {
       id: "destination-weddings",
-      title: "Destination Weddings",
+      title: "Coastal & Destination",
       description:
-        "Considered venue selection, destination logistics, guest experiences, and wedding-day coordination.",
+        "Sunset seaside vows, private villa buyouts, catamaran cocktail parties, and seamless international guest logistics.",
       image: "/images/exp-destination-weddings.jpg",
       alt: "Breathtaking destination wedding celebration overlooking scenic water at twilight",
-      formValue: "Destination wedding",
+      formValue: "Luxury Destination",
+    },
+    {
+      id: "western-weddings",
+      title: "Contemporary Elegance",
+      description:
+        "Sophisticated garden ceremonies, candlelit ballroom receptions, timeless white floral installations, and refined dining.",
+      image: "/images/exp-western-weddings.jpg",
+      alt: "Refined outdoor Western wedding ceremony surrounded by garden greenery and delicate white florals",
+      formValue: "Western / Contemporary Elegance",
     },
     {
       id: "intimate-celebrations",
-      title: "Intimate Celebrations",
+      title: "Intimate Gatherings",
       description:
-        "Smaller, personal gatherings designed around meaningful details, close relationships, and beautiful settings.",
+        "Exclusive private estates, heirloom details, chef-crafted tasting menus, and unforgettable moments with your closest circle.",
       image: "/images/exp-intimate-celebrations.jpg",
       alt: "Warm candlelit evening reception table setting for an intimate wedding dinner",
-      formValue: "Intimate celebration",
+      formValue: "Intimate Bespoke Gathering",
     },
   ],
 
   services: [
     {
       id: "planning-coordination",
-      title: "Planning & Coordination",
+      title: "End-to-End Planning & Production",
       description:
-        "Timelines, logistics, and coordination across the celebration.",
+        "Comprehensive timelines, vendor contracts, financial auditing, and 360-degree on-site management.",
     },
     {
       id: "venue-destination",
-      title: "Venue & Destination",
+      title: "Exclusive Palace & Venue Access",
       description:
-        "Venue research, destination planning, and guest arrangements.",
+        "Direct access to private royal palaces, closed heritage havelis, luxury island resorts, and negotiated VIP rates.",
     },
     {
       id: "design-styling",
-      title: "Design & Styling",
+      title: "3D Stage & Decor Design",
       description:
-        "Floral direction, tablescapes, ceremony settings, and visual details.",
+        "Photorealistic 3D visual renders, custom architectural lighting, statement floral sculptures, and fine table styling.",
     },
     {
       id: "guest-experience",
-      title: "Guest Experience",
+      title: "Guest Hospitality & Concierge",
       description:
-        "Thoughtful hospitality, schedule coordination, and memorable guest moments.",
+        "Airport charters, luxury hotel room blocks, customized welcome gifts, digital RSVP apps, and 24/7 guest assistance.",
     },
   ],
 
   processSteps: [
     {
       step: "01",
-      title: "Discover",
+      title: "Private Consultation",
       description:
-        "We learn about your story, priorities, preferred setting, and vision for the celebration.",
+        "We discuss your vision, preferred destinations, guest size, and preliminary budget in a friendly 1:1 discovery call.",
     },
     {
       step: "02",
-      title: "Curate",
+      title: "Venue & 3D Design Preview",
       description:
-        "We develop a thoughtful planning direction around your preferences, requirements, and budget.",
+        "We secure your dream venue at direct wholesale rates and present photorealistic 3D decor mockups for each ceremony.",
     },
     {
       step: "03",
-      title: "Celebrate",
+      title: "Flawless Wedding Day",
       description:
-        "We coordinate the details so you can focus on the people and moments that matter.",
+        "Our team arrives 48 hours early to coordinate vendors, lighting, ceremonies, and guest care while you relax and celebrate.",
     },
   ],
 
@@ -161,45 +273,106 @@ export const siteConfig = {
 
   formOptions: {
     weddingTypes: [
-      { label: "Select wedding type...", value: "" },
-      { label: "Indian wedding", value: "Indian wedding" },
-      { label: "Western wedding", value: "Western wedding" },
-      { label: "Destination wedding", value: "Destination wedding" },
-      { label: "Intimate celebration", value: "Intimate celebration" },
-      { label: "Other / not decided", value: "Other / not decided" },
+      { label: "Select celebration style...", value: "" },
+      { label: "Royal Indian Palace Wedding", value: "Royal Indian Palace Wedding" },
+      { label: "Western / Contemporary Elegance", value: "Western / Contemporary Elegance" },
+      { label: "Luxury Destination (Beach / Island / International)", value: "Luxury Destination" },
+      { label: "Intimate Bespoke Gathering (Under 100)", value: "Intimate Bespoke Gathering" },
+      { label: "Multi-Cultural / Fusion Celebration", value: "Multi-Cultural / Fusion" },
+      { label: "Other / Custom Vision", value: "Other / Custom Vision" },
     ],
     guestCounts: [
-      { label: "Select guest count...", value: "" },
-      { label: "Under 50", value: "Under 50" },
-      { label: "50–100", value: "50-100" },
-      { label: "100–250", value: "100-250" },
-      { label: "250–500", value: "250-500" },
-      { label: "500+", value: "500+" },
-      { label: "Not decided", value: "Not decided" },
+      { label: "Select estimated guest count...", value: "" },
+      { label: "Under 50 guests (Intimate)", value: "Under 50" },
+      { label: "50–120 guests", value: "50-120" },
+      { label: "120–250 guests", value: "120-250" },
+      { label: "250–500 guests (Grand Celebration)", value: "250-500" },
+      { label: "500+ guests (Royal Scale)", value: "500+" },
+      { label: "Not decided yet", value: "Not decided" },
     ],
     budgetBands: [
-      { label: "Select approximate budget (Illustrative guide)...", value: "" },
-      { label: "Tier 1: Intimate & Curated (Illustrative guide)", value: "Tier 1: Intimate & Curated" },
-      { label: "Tier 2: Classic Heritage Celebration (Illustrative guide)", value: "Tier 2: Classic Heritage Celebration" },
-      { label: "Tier 3: Grand Multi-Day Royal Celebration (Illustrative guide)", value: "Tier 3: Grand Multi-Day Royal Celebration" },
-      { label: "Tier 4: Bespoke Destination Production (Illustrative guide)", value: "Tier 4: Bespoke Destination Production" },
-      { label: "Undisclosed / Custom consultation", value: "Custom consultation" },
+      { label: "Select approximate investment tier...", value: "" },
+      { label: "Tier 1: Intimate & Curated (₹25L – ₹50L / $30K – $60K)", value: "Tier 1: Intimate & Curated" },
+      { label: "Tier 2: Classic Heritage Celebration (₹50L – ₹1.2Cr / $60K – $150K)", value: "Tier 2: Classic Heritage" },
+      { label: "Tier 3: Grand Multi-Day Royal Celebration (₹1.2Cr – ₹3Cr / $150K – $350K)", value: "Tier 3: Grand Royal" },
+      { label: "Tier 4: Ultra-Luxury Bespoke Production (₹3Cr+ / $350K+)", value: "Tier 4: Ultra-Luxury" },
+      { label: "Custom consultation / Undisclosed", value: "Custom consultation" },
+    ],
+    consultationTimes: [
+      "10:00 AM – 10:30 AM",
+      "11:30 AM – 12:00 PM",
+      "02:00 PM – 02:30 PM",
+      "04:00 PM – 04:30 PM",
+      "06:30 PM – 07:00 PM",
+      "08:00 PM – 08:30 PM",
+    ],
+    consultationTypes: [
+      { id: "virtual-15", title: "15-Min Quick Discovery Call", duration: "15 Min", subtitle: "Instant date check, budget feasibility & vision alignment" },
+      { id: "virtual-30", title: "30-Min Wedding Strategy Session", duration: "30 Min", subtitle: "Venue recommendations, real cost breakdown & timelines" },
+      { id: "studio-inperson", title: "Private Studio Meeting", duration: "45 Min", subtitle: "In-person consultation at our Jaipur or Delhi design atelier" },
+    ],
+  },
+
+  // Newsletter config
+  newsletter: {
+    badge: "The Wedding Style Edit",
+    heading: "Get Secret Venue Ideas & Real Wedding Cost Guides",
+    subheading:
+      "Join 3,400+ couples receiving our monthly insider guide to hidden royal palaces, verified venue pricing sheets, and seasonal decor inspiration.",
+    tags: [
+      "Royal Palace Venues",
+      "Beach Destination Resorts",
+      "Stage & Decor Design",
+      "Budget & Timeline Checklists",
+    ],
+  },
+
+  // Exit-intent lead magnet
+  exitIntent: {
+    badge: "Complimentary Wedding Gift",
+    heading: "Wait! Grab The Free 2026 Wedding Style & Cost Guide",
+    subheading:
+      "Get real palace and beach venue pricing, a 12-month wedding checklist, and an interactive budget sheet—free in your inbox.",
+    features: [
+      "Verified pricing breakdown for top 25 royal palace & beach venues",
+      "The 10 questions to ask any hotel before paying a deposit",
+      "Ready-to-use Google Sheets budget & guest allocation template",
+      "Priority 2026–2027 calendar check with our planning director",
     ],
   },
 
   myFormCapture: {
-    endpoint: process.env.NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT || "https://api.myformconnect.com/v1/capture",
-    formId: process.env.NEXT_PUBLIC_MYFORMCAPTURE_FORM_ID || "",
-    source: "aurelle-weddings-website",
+    // FormCapture endpoint
+    endpoint: process.env.NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT || "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd",
+    formId: process.env.NEXT_PUBLIC_MYFORMCAPTURE_FORM_ID || "95dcab67-a579-4a81-9f23-e005ff8204fd",
+    source: "aurelle-weddings-landing-page",
+  },
+
+  scheduling: {
+    // Consultation booking widget
+    actionUrl: process.env.NEXT_PUBLIC_MFC_DEMO_URL || "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658",
+    formUuid: "6506e87c-d573-497a-84c3-7a407b395658",
+    apiBase: "https://staging.myformcapture.com",
+    submitUrl: "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658",
+    slotsUrl: "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658/slots",
+    widgetJsUrl: "https://staging.myformcapture.com/booking-widget.js",
+    widgetCssUrl: "/booking-widget.css",
+    meetingTitle: "Private Wedding Consultation",
+    meetingDescription: "15-minute 1-on-1 strategy call with our Senior Wedding Director",
+    meetingDuration: 15,
+    brandingName: "MyFormConnect",
+    brandingUrl: "https://myformconnect.io",
   },
 
   myFormConnect: {
-    widgetJsUrl: process.env.NEXT_PUBLIC_MYFORMCONNECT_WIDGET_JS_URL || "https://widget.myformconnect.com/embed.js",
-    widgetCssUrl: process.env.NEXT_PUBLIC_MYFORMCONNECT_WIDGET_CSS_URL || "https://widget.myformconnect.com/embed.css",
-    bookingFormId: process.env.NEXT_PUBLIC_MYFORMCONNECT_BOOKING_FORM_ID || "",
-    meetingTitle: "Aurelle Weddings — Introductory Consultation",
+    widgetJsUrl: process.env.NEXT_PUBLIC_MYFORMCONNECT_WIDGET_JS_URL || "https://staging.myformcapture.com/booking-widget.js",
+    widgetCssUrl: process.env.NEXT_PUBLIC_MYFORMCONNECT_WIDGET_CSS_URL || "/booking-widget.css",
+    bookingFormId: process.env.NEXT_PUBLIC_MYFORMCONNECT_BOOKING_FORM_ID || "6506e87c-d573-497a-84c3-7a407b395658",
+    meetingTitle: "Aurelle Weddings — Private Wedding Consultation",
     meetingDuration: 15,
     description:
-      "A 15-minute introductory conversation to discuss your wedding vision, preferred dates, destination ideas, and planning timeline.",
+      "A complimentary 1:1 conversation with our Senior Wedding Producer to discuss your vision, preferred destinations, and check 2026–2027 calendar availability.",
   },
 };
+
+

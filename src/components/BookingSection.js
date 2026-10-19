@@ -17,7 +17,7 @@ export default function BookingSection() {
       return;
     }
 
-    // Load widget stylesheet dynamically if provided
+    // Inject widget styles if configured
     if (siteConfig.myFormConnect.widgetCssUrl) {
       const existingLink = document.querySelector(
         `link[href="${siteConfig.myFormConnect.widgetCssUrl}"]`
@@ -30,7 +30,7 @@ export default function BookingSection() {
       }
     }
 
-    // Load widget script dynamically
+    // Load scheduling script
     if (siteConfig.myFormConnect.widgetJsUrl) {
       const existingScript = document.querySelector(
         `script[src="${siteConfig.myFormConnect.widgetJsUrl}"]`
@@ -42,7 +42,7 @@ export default function BookingSection() {
         script.async = true;
         script.onload = () => {
           setWidgetLoaded(true);
-          // If the widget has an init method, trigger it safely
+          // Init widget if helper is available
           if (window.MyFormConnect && typeof window.MyFormConnect.init === "function") {
             try {
               window.MyFormConnect.init({
@@ -81,7 +81,7 @@ export default function BookingSection() {
         </div>
 
         <div className="booking-container-wrap">
-          {/* Header Card */}
+          {/* Meeting details */}
           <div className="booking-header">
             <h3 className="serif-headline serif-h3">
               {siteConfig.myFormConnect.meetingTitle}
@@ -117,7 +117,7 @@ export default function BookingSection() {
             </div>
           </div>
 
-          {/* Widget Mount or Graceful Placeholder */}
+          {/* Calendar widget or placeholder */}
           <div className="booking-body">
             {isWidgetConfigured ? (
               loadError ? (
@@ -143,7 +143,7 @@ export default function BookingSection() {
                 </div>
               )
             ) : (
-              /* Clearly Documented Placeholder State */
+              /* Setup guide when no booking ID is configured */
               <div className="widget-placeholder-card">
                 <svg
                   className="widget-placeholder-icon"

@@ -4,12 +4,12 @@ import { siteConfig } from "@/lib/siteConfig";
 export default function Footer() {
   return (
     <footer id="contact" className="site-footer" role="contentinfo">
-      {/* Subtle Antique Gold Accent Line */}
+      {/* Gold divider */}
       <div className="footer-top-accent" aria-hidden="true" />
 
       <div className="container">
         <div className="footer-grid">
-          {/* Column 1: Brand & Philosophy */}
+          {/* Brand info */}
           <div className="footer-brand">
             <Link href="#hero" className="brand-link" style={{ marginBottom: "1rem", display: "inline-flex" }}>
               <svg
@@ -31,26 +31,36 @@ export default function Footer() {
             <p>
               Thoughtfully curated royal Indian, Western, destination, and intimate wedding celebrations crafted with timeless elegance.
             </p>
+            <p style={{ marginTop: "0.75rem", fontSize: "0.85rem", color: "var(--color-accent)" }}>
+              {siteConfig.brand.seasonBadge}
+            </p>
           </div>
 
-          {/* Column 2: Navigation Links */}
+          {/* Directory links */}
           <div>
-            <h4 className="footer-heading">Navigation</h4>
+            <h4 className="footer-heading">Atelier Directory</h4>
             <ul className="footer-links-list">
-              {siteConfig.navigation.map((item) => (
-                <li key={item.label}>
-                  <a href={item.href}>{item.label}</a>
-                </li>
-              ))}
               <li>
-                <a href="#gallery">Inspiration Gallery</a>
+                <a href="#schedule">Book 1:1 Consultation</a>
+              </li>
+              <li>
+                <a href="#enquiry">Request Bespoke Proposal</a>
+              </li>
+              <li>
+                <a href="#packages">Curated Collections</a>
+              </li>
+              <li>
+                <a href="#why-aurelle">Why Choose Aurelle</a>
+              </li>
+              <li>
+                <a href="#newsletter">The Bridal Dossier</a>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Experiences */}
+          {/* Wedding styles */}
           <div>
-            <h4 className="footer-heading">Experiences</h4>
+            <h4 className="footer-heading">Celebrations</h4>
             <ul className="footer-links-list">
               {siteConfig.experiences.map((exp) => (
                 <li key={exp.id}>
@@ -60,9 +70,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Contact & Studio Placeholders */}
+          {/* Concierge desk */}
           <div>
-            <h4 className="footer-heading">Studio Inquiries</h4>
+            <h4 className="footer-heading">Concierge Desk</h4>
             <div className="footer-contact-item">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -85,18 +95,14 @@ export default function Footer() {
               </svg>
               <span>{siteConfig.brand.contact.locationPlaceholder}</span>
             </div>
-
-            <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)", marginTop: "0.75rem", fontStyle: "italic" }}>
-              {siteConfig.brand.contact.disclaimer}
-            </p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Copyright & credits */}
         <div className="footer-bottom">
           <div>{siteConfig.brand.copyright}</div>
           <div>
-            Crafted for MyFormConnect &bull; Luxury Wedding Demo Experience
+            Powered by MyFormConnect &bull; High-Converting Wedding Landing Page
           </div>
         </div>
       </div>

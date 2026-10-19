@@ -12,7 +12,7 @@ export default function WeddingExperiences({ onSelectExperience }) {
       aria-labelledby="experiences-heading"
     >
       <div className="container">
-        {/* Section Header */}
+        {/* Section heading */}
         <div className="section-header">
           <span className="eyebrow">Our Portfolio of Styles</span>
           <h2 id="experiences-heading" className="serif-headline serif-h2">
@@ -24,7 +24,7 @@ export default function WeddingExperiences({ onSelectExperience }) {
           </p>
         </div>
 
-        {/* 4 Editorial Cards Grid */}
+        {/* Experience cards */}
         <div className="experiences-grid">
           {siteConfig.experiences.map((exp, index) => (
             <article key={exp.id} className="experience-card">
@@ -54,7 +54,7 @@ export default function WeddingExperiences({ onSelectExperience }) {
                         const selectEl = document.getElementById("weddingType");
                         if (selectEl) {
                           selectEl.value = exp.formValue;
-                          // Dispatch change event to sync React state
+                          // Sync value with React select state
                           selectEl.dispatchEvent(new Event("change", { bubbles: true }));
                         }
                       }

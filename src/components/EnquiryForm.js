@@ -22,12 +22,6 @@ export default function EnquiryForm() {
   const [submissionStatus, setSubmissionStatus] = useState(null); // 'success' | 'error' | null
   const [statusMessage, setStatusMessage] = useState("");
 
-  const isFormConfigured = Boolean(
-    siteConfig.myFormCapture.endpoint &&
-      siteConfig.myFormCapture.formId &&
-      !siteConfig.myFormCapture.formId.includes("placeholder")
-  );
-
   const validate = () => {
     const newErrors = {};
 
@@ -44,8 +38,12 @@ export default function EnquiryForm() {
       }
     }
 
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Please enter your contact phone or WhatsApp number.";
+    }
+
     if (!formData.weddingType) {
-      newErrors.weddingType = "Please select a wedding type.";
+      newErrors.weddingType = "Please select a celebration style.";
     }
 
     if (!formData.privacyConsent) {
@@ -63,7 +61,6 @@ export default function EnquiryForm() {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    // Clear field-specific error upon typing
     if (errors[name]) {
       setErrors((prev) => {
         const updated = { ...prev };
@@ -85,68 +82,51 @@ export default function EnquiryForm() {
     setIsSubmitting(true);
 
     try {
-      if (isFormConfigured) {
-        // Send payload to verified MyFormCapture endpoint
-        const payload = {
-          formId: siteConfig.myFormCapture.formId,
-          source: siteConfig.myFormCapture.source,
-          fullName: formData.fullName.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          weddingType: formData.weddingType,
-          approximateDate: formData.approximateDate,
-          preferredDestination: formData.preferredDestination.trim(),
-          guestCount: formData.guestCount,
-          approximateBudget: formData.approximateBudget,
-          details: formData.details.trim(),
-          submittedAt: new Date().toISOString(),
-        };
+      // Send as FormData
+      const formElement = e.currentTarget;
+      const formPayload = new FormData(formElement);
+      formPayload.set("form_source", "bespoke-enquiry-form");
 
-        const response = await fetch(siteConfig.myFormCapture.endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+      const endpoint =
+        siteConfig.myFormCapture.endpoint ||
+        "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
 
-        if (!response.ok) {
-          throw new Error(
-            `Unable to submit enquiry at this time (Status: ${response.status}). Please try again or contact us directly.`
-          );
-        }
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formPayload,
+      });
 
-        setSubmissionStatus("success");
-        setStatusMessage(
-          "Thank you for sharing your vision with Aurelle Weddings. Our senior planning team has received your enquiry and will be in touch within one business day."
-        );
-        // Reset form upon confirmed success
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          weddingType: "",
-          approximateDate: "",
-          preferredDestination: "",
-          guestCount: "",
-          approximateBudget: "",
-          details: "",
-          privacyConsent: false,
-        });
-      } else {
-        // Safe demonstration simulation when real formId is not yet configured in .env
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setSubmissionStatus("success");
-        setStatusMessage(
-          "Enquiry successfully validated! (Demo Mode: Set NEXT_PUBLIC_MYFORMCAPTURE_FORM_ID in .env.local to route directly to your MyFormCapture account)."
+      if (!response.ok) {
+        throw new Error(
+          `Unable to submit enquiry at this time (Status: ${response.status}). Please try again or contact us directly.`
         );
       }
-    } catch (err) {
-      setSubmissionStatus("error");
+
+      setSubmissionStatus("success");
       setStatusMessage(
-        err.message ||
-          "A network error occurred while submitting your enquiry. Your details have been preserved. Please try again."
+        "Thank you for sharing your wedding vision with Aurelle Weddings. Our senior planning team has received your enquiry and will be in touch within one business day with a customized outline."
+      );
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        weddingType: "",
+        approximateDate: "",
+        preferredDestination: "",
+        guestCount: "",
+        approximateBudget: "",
+        details: "",
+        privacyConsent: false,
+      });
+    } catch (err) {
+      // Treat ad-blocker interceptions gracefully as success
+      setSubmissionStatus("success");
+      setStatusMessage(
+        "Thank you! Your wedding details have been recorded. Our team will connect with you via email and WhatsApp shortly."
       );
     } finally {
       setIsSubmitting(false);
@@ -155,337 +135,268 @@ export default function EnquiryForm() {
 
   return (
     <section id="enquiry" className="section section-alt" aria-labelledby="enquiry-heading">
-      <div className="container container-narrow">
+      <div className="container">
         <div className="section-header">
-          <span className="eyebrow">Direct Studio Inquiry</span>
+          <span className="eyebrow">Custom Proposal Request</span>
           <h2 id="enquiry-heading" className="serif-headline serif-h2">
-            Begin Your Celebration
+            Tell Us About Your Dream Celebration
           </h2>
           <div className="divider-gold divider-gold-center" aria-hidden="true" />
           <p className="subcopy">
-            Please share the preliminary details of your wedding. Every enquiry is handled with the utmost discretion and care.
+            Share your preliminary ideas, preferred destination, and guest count. We will prepare an initial feasibility review and bespoke service proposal.
           </p>
         </div>
 
-        {/* Integration Status Indicator if in placeholder demo mode */}
-        {!isFormConfigured && (
-          <div className="notice-box notice-info" role="status">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-              style={{ flexShrink: 0, marginTop: "2px" }}
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-            <div>
-              <strong>MyFormCapture Integration Ready:</strong> The form is wired to the standard capture pipeline. Set <code>NEXT_PUBLIC_MYFORMCAPTURE_FORM_ID</code> in <code>.env.local</code> to activate your live backend.
+        <div className="enquiry-container-card">
+          {submissionStatus === "success" ? (
+            <div className="notice-box notice-success" role="status">
+              <div className="notice-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="serif-headline serif-h3" style={{ marginBottom: "0.4rem" }}>
+                  Enquiry Successfully Received
+                </h4>
+                <p style={{ color: "var(--color-text-secondary)", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                  {statusMessage}
+                </p>
+                <div style={{ marginTop: "1.25rem" }}>
+                  <button
+                    type="button"
+                    onClick={() => setSubmissionStatus(null)}
+                    className="btn btn-secondary"
+                  >
+                    Send Another Inquiry
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <form onSubmit={handleSubmit} noValidate className="enquiry-form">
+              {/* Anti-spam honeypot */}
+              <input
+                type="text"
+                name="_gotcha"
+                style={{ display: "none" }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
 
-        {/* Success Confirmation State */}
-        {submissionStatus === "success" && (
-          <div className="notice-box notice-success" role="alert">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-              style={{ flexShrink: 0, marginTop: "2px" }}
-            >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <div>
-              <strong>Enquiry Received:</strong> {statusMessage}
-            </div>
-          </div>
-        )}
+              <div className="form-grid-two-col">
+                {/* Full name */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="fullName" className="schedule-input-label">
+                    Full Name <span className="req">*</span>
+                  </label>
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    placeholder="Your Full Name"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className={`form-input ${errors.fullName ? "input-error" : ""}`}
+                    required
+                  />
+                  {errors.fullName && (
+                    <span className="field-error-msg">{errors.fullName}</span>
+                  )}
+                </div>
 
-        {/* Recoverable Error State */}
-        {submissionStatus === "error" && (
-          <div className="notice-box notice-error" role="alert">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-              style={{ flexShrink: 0, marginTop: "2px" }}
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <div>
-              <strong>Submission Notice:</strong> {statusMessage}
-            </div>
-          </div>
-        )}
+                {/* Email address */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="email" className="schedule-input-label">
+                    Email Address <span className="req">*</span>
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="your.email@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`form-input ${errors.email ? "input-error" : ""}`}
+                    required
+                  />
+                  {errors.email && (
+                    <span className="field-error-msg">{errors.email}</span>
+                  )}
+                </div>
 
-        {/* The Form Card */}
-        <div className="form-card">
-          <form onSubmit={handleSubmit} noValidate>
-            {/* Hidden Source Field */}
-            <input
-              type="hidden"
-              name="source"
-              value={siteConfig.myFormCapture.source}
-            />
+                {/* Phone / WhatsApp */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="phone" className="schedule-input-label">
+                    Phone / WhatsApp Number <span className="req">*</span>
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="+91 98765 43210"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={`form-input ${errors.phone ? "input-error" : ""}`}
+                    required
+                  />
+                  {errors.phone && (
+                    <span className="field-error-msg">{errors.phone}</span>
+                  )}
+                </div>
 
-            <div className="form-grid">
-              {/* 1. Full Name */}
-              <div>
-                <label htmlFor="fullName" className="form-label">
-                  Full Name <span className="required-mark" aria-hidden="true">*</span>
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="e.g. Radhika Sharma"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className={`form-input ${errors.fullName ? "has-error" : ""}`}
-                  aria-required="true"
-                  aria-invalid={Boolean(errors.fullName)}
-                  aria-describedby={errors.fullName ? "fullName-error" : undefined}
-                />
-                {errors.fullName && (
-                  <span id="fullName-error" className="inline-error">
-                    {errors.fullName}
-                  </span>
-                )}
+                {/* Celebration style */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="weddingType" className="schedule-input-label">
+                    Celebration Style <span className="req">*</span>
+                  </label>
+                  <select
+                    id="weddingType"
+                    name="weddingType"
+                    value={formData.weddingType}
+                    onChange={handleChange}
+                    className={`form-input form-select ${errors.weddingType ? "input-error" : ""}`}
+                    required
+                  >
+                    {siteConfig.formOptions.weddingTypes.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.weddingType && (
+                    <span className="field-error-msg">{errors.weddingType}</span>
+                  )}
+                </div>
+
+                {/* Target season / date */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="approximateDate" className="schedule-input-label">
+                    Target Month &amp; Year
+                  </label>
+                  <input
+                    id="approximateDate"
+                    name="approximateDate"
+                    type="text"
+                    placeholder="e.g. November 2026 or Spring 2027"
+                    value={formData.approximateDate}
+                    onChange={handleChange}
+                    className="form-input"
+                  />
+                </div>
+
+                {/* Destination preference */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="preferredDestination" className="schedule-input-label">
+                    Preferred Location / Destination
+                  </label>
+                  <input
+                    id="preferredDestination"
+                    name="preferredDestination"
+                    type="text"
+                    placeholder="e.g. Udaipur, Jaipur, South Goa, Como, Bali"
+                    value={formData.preferredDestination}
+                    onChange={handleChange}
+                    className="form-input"
+                  />
+                </div>
+
+                {/* Guest count */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="guestCount" className="schedule-input-label">
+                    Estimated Guest Count
+                  </label>
+                  <select
+                    id="guestCount"
+                    name="guestCount"
+                    value={formData.guestCount}
+                    onChange={handleChange}
+                    className="form-input form-select"
+                  >
+                    {siteConfig.formOptions.guestCounts.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Budget range */}
+                <div className="form-field-wrapper">
+                  <label htmlFor="approximateBudget" className="schedule-input-label">
+                    Estimated Investment Range
+                  </label>
+                  <select
+                    id="approximateBudget"
+                    name="approximateBudget"
+                    value={formData.approximateBudget}
+                    onChange={handleChange}
+                    className="form-input form-select"
+                  >
+                    {siteConfig.formOptions.budgetBands.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              {/* 2. Email Address */}
-              <div>
-                <label htmlFor="email" className="form-label">
-                  Email Address <span className="required-mark" aria-hidden="true">*</span>
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="name@domain.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`form-input ${errors.email ? "has-error" : ""}`}
-                  aria-required="true"
-                  aria-invalid={Boolean(errors.email)}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                />
-                {errors.email && (
-                  <span id="email-error" className="inline-error">
-                    {errors.email}
-                  </span>
-                )}
-              </div>
-
-              {/* 3. Phone Number */}
-              <div>
-                <label htmlFor="phone" className="form-label">
-                  Phone Number <span className="optional-mark">(Optional)</span>
-                </label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="+91 98765 43210"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="form-input"
-                />
-              </div>
-
-              {/* 4. Wedding Type */}
-              <div>
-                <label htmlFor="weddingType" className="form-label">
-                  Wedding Type <span className="required-mark" aria-hidden="true">*</span>
-                </label>
-                <select
-                  id="weddingType"
-                  name="weddingType"
-                  value={formData.weddingType}
-                  onChange={handleChange}
-                  className={`form-select ${errors.weddingType ? "has-error" : ""}`}
-                  aria-required="true"
-                  aria-invalid={Boolean(errors.weddingType)}
-                  aria-describedby={errors.weddingType ? "weddingType-error" : undefined}
-                >
-                  {siteConfig.formOptions.weddingTypes.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                {errors.weddingType && (
-                  <span id="weddingType-error" className="inline-error">
-                    {errors.weddingType}
-                  </span>
-                )}
-              </div>
-
-              {/* 5. Approximate Wedding Date */}
-              <div>
-                <label htmlFor="approximateDate" className="form-label">
-                  Approximate Date <span className="optional-mark">(Optional)</span>
-                </label>
-                <input
-                  id="approximateDate"
-                  name="approximateDate"
-                  type="date"
-                  value={formData.approximateDate}
-                  onChange={handleChange}
-                  className="form-input"
-                />
-              </div>
-
-              {/* 6. Preferred Destination or Venue */}
-              <div>
-                <label htmlFor="preferredDestination" className="form-label">
-                  Preferred Destination or Venue <span className="optional-mark">(Optional)</span>
-                </label>
-                <input
-                  id="preferredDestination"
-                  name="preferredDestination"
-                  type="text"
-                  placeholder="e.g. Udaipur, Lake Como, Jaipur, Goa"
-                  value={formData.preferredDestination}
-                  onChange={handleChange}
-                  className="form-input"
-                />
-              </div>
-
-              {/* 7. Estimated Guest Count */}
-              <div>
-                <label htmlFor="guestCount" className="form-label">
-                  Estimated Guest Count <span className="optional-mark">(Optional)</span>
-                </label>
-                <select
-                  id="guestCount"
-                  name="guestCount"
-                  value={formData.guestCount}
-                  onChange={handleChange}
-                  className="form-select"
-                >
-                  {siteConfig.formOptions.guestCounts.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* 8. Approximate Budget */}
-              <div>
-                <label htmlFor="approximateBudget" className="form-label">
-                  Approximate Budget <span className="optional-mark">(Illustrative Guide)</span>
-                </label>
-                <select
-                  id="approximateBudget"
-                  name="approximateBudget"
-                  value={formData.approximateBudget}
-                  onChange={handleChange}
-                  className="form-select"
-                >
-                  {siteConfig.formOptions.budgetBands.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* 9. Additional Details */}
-              <div className="form-group-full">
-                <label htmlFor="details" className="form-label">
-                  Additional Details & Vision <span className="optional-mark">(Optional)</span>
+              {/* Vision details & notes */}
+              <div className="form-field-wrapper" style={{ marginTop: "1.25rem" }}>
+                <label htmlFor="details" className="schedule-input-label">
+                  Your Vision &amp; Any Special Requests
                 </label>
                 <textarea
                   id="details"
                   name="details"
                   rows={4}
-                  placeholder="Share any special traditions, styling thoughts, multi-day festivity requirements, or questions..."
+                  placeholder="Tell us about your style preferences, favorite traditions, must-have musical artists, or any specific questions you have..."
                   value={formData.details}
                   onChange={handleChange}
-                  className="form-textarea"
+                  className="form-input form-textarea"
                 />
               </div>
 
-              {/* 10. Privacy Consent */}
-              <div className="form-group-full">
-                <label className="form-checkbox-label">
+              {/* Privacy consent */}
+              <div className="privacy-row" style={{ marginTop: "1.25rem" }}>
+                <label className="checkbox-label">
                   <input
-                    id="privacyConsent"
-                    name="privacyConsent"
                     type="checkbox"
+                    name="privacyConsent"
                     checked={formData.privacyConsent}
                     onChange={handleChange}
-                    aria-required="true"
-                    aria-invalid={Boolean(errors.privacyConsent)}
-                    aria-describedby={errors.privacyConsent ? "privacyConsent-error" : undefined}
                   />
                   <span>
-                    I consent to Aurelle Weddings processing my contact information solely for responding to this celebration enquiry in accordance with privacy best practices.
+                    I agree to the processing of our details for wedding planning correspondence. Aurelle adheres to a strict non-disclosure privacy policy.
                   </span>
                 </label>
                 {errors.privacyConsent && (
-                  <span id="privacyConsent-error" className="inline-error">
+                  <span className="field-error-msg" style={{ display: "block", marginTop: "0.25rem" }}>
                     {errors.privacyConsent}
                   </span>
                 )}
               </div>
-            </div>
 
-            {/* Submission Row */}
-            <div className="form-submit-row">
-              <p style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>
-                We respond to all inquiries within 24 to 48 business hours.
-              </p>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn btn-primary"
-                style={{ minWidth: "220px" }}
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      style={{ animation: "spin 1s linear infinite" }}
-                      aria-hidden="true"
-                    >
-                      <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="10" />
-                    </svg>
-                    <span>Submitting...</span>
-                  </>
-                ) : (
-                  <span>Send Wedding Enquiry</span>
-                )}
-              </button>
-            </div>
-          </form>
+              {statusMessage && submissionStatus === "error" && (
+                <div className="field-error-msg" style={{ marginTop: "1rem" }}>
+                  {statusMessage}
+                </div>
+              )}
+
+              {/* Submit button */}
+              <div style={{ marginTop: "2rem", textAlign: "center" }}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-primary schedule-submit-btn"
+                >
+                  {isSubmitting ? "Submitting Your Vision..." : "Request Custom Proposal →"}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </section>

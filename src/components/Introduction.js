@@ -6,7 +6,7 @@ export default function Introduction() {
     <section id="philosophy" className="section" aria-labelledby="intro-heading">
       <div className="container">
         <div className="intro-grid">
-          {/* Editorial Column */}
+          {/* Philosophy & values */}
           <div className="intro-editorial">
             <span className="eyebrow">Our Philosophy</span>
             <h2 id="intro-heading" className="serif-headline serif-h2">
@@ -28,7 +28,7 @@ export default function Introduction() {
             </div>
           </div>
 
-          {/* Supporting Photography Frame */}
+          {/* Editorial photo */}
           <div className="intro-image-frame">
             <Image
               src="/images/intro-wedding-details.jpg"
