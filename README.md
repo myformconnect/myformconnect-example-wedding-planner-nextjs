@@ -31,7 +31,7 @@ Copy `.env.example` to `.env.local`. All variables use the `NEXT_PUBLIC_` prefix
 
 ```env
 # Site URL for SEO & preview cards
-NEXT_PUBLIC_SITE_URL=https://aurelleweddings.com
+NEXT_PUBLIC_SITE_URL=https://aurelleweddings.vercel.app
 
 # FormCapture (inquiries, guide download, newsletter)
 NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT=https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd

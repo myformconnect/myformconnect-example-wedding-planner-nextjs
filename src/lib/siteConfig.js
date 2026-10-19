@@ -2,6 +2,7 @@
 
 
 export const siteConfig = {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://aurelleweddings.vercel.app",
   brand: {
     name: "Aurelle Weddings",
     tagline: "Bespoke Luxury Wedding Atelier",
