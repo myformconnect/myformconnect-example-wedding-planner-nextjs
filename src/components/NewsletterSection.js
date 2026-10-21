@@ -1,13 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/lib/siteConfig";
+
+// Form submission endpoint — works with or without environment variables
+const NEWSLETTER_ENDPOINT =
+  process.env.NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT ||
+  "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
+
+// Curated topic tags
+const NEWSLETTER_TAGS = [
+  "Royal Palace Venues",
+  "Beach Destination Resorts",
+  "Stage & Decor Design",
+  "Budget & Timeline Checklists",
+];
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [selectedTags, setSelectedTags] = useState([
-    siteConfig.newsletter.tags[0],
-    siteConfig.newsletter.tags[1],
+    NEWSLETTER_TAGS[0],
+    NEWSLETTER_TAGS[1],
   ]);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,11 +53,7 @@ export default function NewsletterSection() {
       formPayload.set("form_source", "wedding-style-edit-newsletter");
       formPayload.set("selected_interests", selectedTags.join(", "));
 
-      const endpoint =
-        siteConfig.myFormCapture.endpoint ||
-        "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(NEWSLETTER_ENDPOINT, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -71,14 +79,14 @@ export default function NewsletterSection() {
     <section className="section section-newsletter" id="newsletter" aria-labelledby="newsletter-heading">
       <div className="container">
         <div className="newsletter-card">
-          <div className="newsletter-badge">{siteConfig.newsletter.badge}</div>
+          <div className="newsletter-badge">The Wedding Style Edit</div>
 
           <h2 id="newsletter-heading" className="serif-headline serif-h2 newsletter-title">
-            {siteConfig.newsletter.heading}
+            Get Secret Venue Ideas &amp; Real Wedding Cost Guides
           </h2>
 
           <p className="newsletter-subtitle">
-            {siteConfig.newsletter.subheading}
+            Join 3,400+ couples receiving our monthly insider guide to hidden royal palaces, verified venue pricing sheets, and seasonal decor inspiration.
           </p>
 
           {isSubscribed ? (
@@ -107,7 +115,7 @@ export default function NewsletterSection() {
 
               <div className="newsletter-tags-label">Select Your Curated Interests:</div>
               <div className="newsletter-tags-row">
-                {siteConfig.newsletter.tags.map((tag) => {
+                {NEWSLETTER_TAGS.map((tag) => {
                   const active = selectedTags.includes(tag);
                   return (
                     <button

@@ -1,23 +1,55 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/lib/siteConfig";
 import BookingWidget from "@/components/BookingWidget";
+
+// Form endpoint & calendar link — works both with env variable and directly with fallback
+const SCHEDULING_FORM_URL =
+  process.env.NEXT_PUBLIC_MFC_DEMO_URL ||
+  "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658";
+
+// Consultation types options
+const CONSULTATION_TYPES = [
+  {
+    id: "virtual-15",
+    title: "15-Min Quick Discovery Call",
+    duration: "15 Min",
+    subtitle: "Instant date check, budget feasibility & vision alignment",
+  },
+  {
+    id: "virtual-30",
+    title: "30-Min Wedding Strategy Session",
+    duration: "30 Min",
+    subtitle: "Venue recommendations, real cost breakdown & timelines",
+  },
+  {
+    id: "studio-inperson",
+    title: "Private Studio Meeting",
+    duration: "45 Min",
+    subtitle: "In-person consultation at our Jaipur or Delhi design atelier",
+  },
+];
+
+// Available start time slots
+const CONSULTATION_TIMES = [
+  "10:00 AM – 10:30 AM",
+  "11:30 AM – 12:00 PM",
+  "02:00 PM – 02:30 PM",
+  "04:00 PM – 04:30 PM",
+  "06:30 PM – 07:00 PM",
+  "08:00 PM – 08:30 PM",
+];
 
 export default function ScheduleForm() {
   const [activeTab, setActiveTab] = useState("calendar"); // 'calendar' | 'direct'
-  const [selectedType, setSelectedType] = useState(
-    siteConfig.formOptions.consultationTypes[0].id
-  );
+  const [selectedType, setSelectedType] = useState(CONSULTATION_TYPES[0].id);
   const [selectedDate, setSelectedDate] = useState(() => {
     // Default to 3 days out
     const d = new Date();
     d.setDate(d.getDate() + 3);
     return d.toISOString().split("T")[0];
   });
-  const [selectedTime, setSelectedTime] = useState(
-    siteConfig.formOptions.consultationTimes[1]
-  );
+  const [selectedTime, setSelectedTime] = useState(CONSULTATION_TIMES[1]);
 
   const [formData, setFormData] = useState({
     coupleNames: "",
@@ -75,19 +107,12 @@ export default function ScheduleForm() {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    const chosenTypeObj = siteConfig.formOptions.consultationTypes.find(
-      (t) => t.id === selectedType
-    );
+    const chosenTypeObj = CONSULTATION_TYPES.find((t) => t.id === selectedType);
 
     try {
       // Submit as FormData
       const formElement = e.currentTarget;
       const formPayload = new FormData(formElement);
-
-      // Post to scheduling endpoint
-      const endpoint =
-        siteConfig.scheduling.actionUrl ||
-        "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658";
 
       // Map form fields to endpoint format
       formPayload.set("name", formData.coupleNames.trim());
@@ -100,7 +125,7 @@ export default function ScheduleForm() {
       formPayload.set("location_preference", formData.destinationOrCity.trim() || "Virtual Video Call");
       formPayload.set("custom_message", `Destination/City: ${formData.destinationOrCity} | Notes: ${formData.notes}`);
 
-      const response = await fetch(endpoint, {
+      const response = await fetch(SCHEDULING_FORM_URL, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -317,10 +342,10 @@ export default function ScheduleForm() {
                 /* Calendar widget view */
                 <div className="turnkey-widget-container">
                   <BookingWidget
-                    actionUrl={siteConfig.scheduling.actionUrl}
-                    meetingTitle={siteConfig.scheduling.meetingTitle}
-                    meetingDescription={siteConfig.scheduling.meetingDescription}
-                    meetingDuration={siteConfig.scheduling.meetingDuration}
+                    actionUrl={SCHEDULING_FORM_URL}
+                    meetingTitle="Private Wedding Consultation"
+                    meetingDescription="15-minute 1-on-1 strategy call with our Senior Wedding Director"
+                    meetingDuration={15}
                   />
                 </div>
               ) : (
@@ -343,7 +368,7 @@ export default function ScheduleForm() {
                     </div>
 
                     <div className="consultation-types-grid">
-                      {siteConfig.formOptions.consultationTypes.map((type) => {
+                      {CONSULTATION_TYPES.map((type) => {
                         const isSelected = selectedType === type.id;
                         return (
                           <button
@@ -393,7 +418,7 @@ export default function ScheduleForm() {
                           Available Start Times (IST) <span className="req">*</span>
                         </div>
                         <div className="slots-grid">
-                          {siteConfig.formOptions.consultationTimes.map((time) => {
+                          {CONSULTATION_TIMES.map((time) => {
                             const isSelected = selectedTime === time;
                             return (
                               <button

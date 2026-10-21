@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { siteConfig } from "@/lib/siteConfig";
+
+// Form submission endpoint — works with or without environment variables
+const EXIT_MODAL_ENDPOINT =
+  process.env.NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT ||
+  "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
 
 export default function ExitIntentModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,11 +114,7 @@ export default function ExitIntentModal() {
       const formElement = e.currentTarget;
       const formPayload = new FormData(formElement);
 
-      const endpoint =
-        siteConfig.myFormCapture.endpoint ||
-        "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(EXIT_MODAL_ENDPOINT, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -228,12 +228,12 @@ export default function ExitIntentModal() {
               /* Guide request form */
               <div className="exit-modal-content">
                 <div className="exit-cta-header">
-                  <span className="exit-modal-badge">{siteConfig.exitIntent.badge}</span>
+                  <span className="exit-modal-badge">Complimentary Wedding Gift</span>
                   <h3 id="exit-modal-title" className="serif-headline serif-h3 exit-modal-title">
-                    {siteConfig.exitIntent.heading}
+                    Wait! Grab The Free 2026 Wedding Style &amp; Cost Guide
                   </h3>
                   <p className="exit-modal-subcopy">
-                    {siteConfig.exitIntent.subheading}
+                    Get real palace and beach venue pricing, a 12-month wedding checklist, and an interactive budget sheet—free in your inbox.
                   </p>
                 </div>
 
@@ -275,7 +275,7 @@ export default function ExitIntentModal() {
                         id="exitNames"
                         name="names"
                         type="text"
-                        placeholder="e.g. Priya & Arjun"
+                        placeholder="e.g. Priya &amp; Arjun"
                         value={formData.names}
                         onChange={handleChange}
                         className={`form-input ${errors.names ? "input-error" : ""}`}

@@ -2,27 +2,37 @@
 
 import React, { useEffect } from "react";
 import Script from "next/script";
-import { siteConfig } from "@/lib/siteConfig";
+// Load widget styling co-located directly in the same folder
+import "./booking-widget.css";
+
+// Form and endpoint settings — works with or without environment variables
+const DEFAULT_BOOKING_URL =
+  process.env.NEXT_PUBLIC_MFC_DEMO_URL ||
+  "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658";
+const DEFAULT_FORM_UUID = "6506e87c-d573-497a-84c3-7a407b395658";
+const DEFAULT_API_BASE = "https://staging.myformcapture.com";
 
 export default function BookingWidget({
-  actionUrl = siteConfig.scheduling.actionUrl,
-  meetingTitle = siteConfig.scheduling.meetingTitle,
-  meetingDescription = siteConfig.scheduling.meetingDescription,
-  meetingDuration = siteConfig.scheduling.meetingDuration,
+  actionUrl = DEFAULT_BOOKING_URL,
+  meetingTitle = "Private Wedding Consultation",
+  meetingDescription = "15-minute 1-on-1 strategy call with our Senior Wedding Director",
+  meetingDuration = 15,
 }) {
-  // Get UUID from URL or fallback
-  const rawUrl = (actionUrl || "").trim();
+  const rawUrl = (actionUrl || DEFAULT_BOOKING_URL).trim();
+
+  // Extract form UUID from URL or fall back to default
   const uuidMatch = rawUrl.match(
     /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/
   );
-  const uuid = uuidMatch ? uuidMatch[0] : siteConfig.scheduling.formUuid;
+  const uuid = uuidMatch ? uuidMatch[0] : DEFAULT_FORM_UUID;
 
-  let apiBase = siteConfig.scheduling.apiBase || "https://staging.myformcapture.com";
+  // Determine API base (e.g. https://staging.myformcapture.com)
+  let apiBase = DEFAULT_API_BASE;
   try {
     const parsed = new URL(rawUrl);
     apiBase = parsed.origin;
-  } catch (e) {
-    // Default to staging API if URL parsing fails
+  } catch {
+    apiBase = DEFAULT_API_BASE;
   }
 
   const cleanSubmitUrl = `${apiBase}/f/${uuid}`;
@@ -40,9 +50,6 @@ export default function BookingWidget({
 
   return (
     <div className="w-full booking-widget-wrapper">
-      {/* Widget styling */}
-      <link rel="stylesheet" href="/booking-widget.css" />
-
       {/* Widget script */}
       <Script
         src={`${apiBase}/booking-widget.js`}

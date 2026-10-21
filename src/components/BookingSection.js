@@ -1,15 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { siteConfig } from "@/lib/siteConfig";
+// Co-located widget styling
+import "./booking-widget.css";
+
+// Booking configuration — works with or without environment variables
+const BOOKING_FORM_ID =
+  process.env.NEXT_PUBLIC_MYFORMCONNECT_BOOKING_FORM_ID ||
+  "6506e87c-d573-497a-84c3-7a407b395658";
+
+const WIDGET_JS_URL =
+  process.env.NEXT_PUBLIC_MYFORMCONNECT_WIDGET_JS_URL ||
+  "https://staging.myformcapture.com/booking-widget.js";
+
+const MEETING_TITLE = "Aurelle Weddings — Private Wedding Consultation";
+const MEETING_DURATION = 15;
+const MEETING_DESCRIPTION =
+  "A complimentary 1:1 conversation with our Senior Wedding Producer to discuss your vision, preferred destinations, and check 2026–2027 calendar availability.";
+const CONCIERGE_EMAIL = "concierge@aurelleweddings.com";
 
 export default function BookingSection() {
   const [widgetLoaded, setWidgetLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
 
-  const bookingFormId = siteConfig.myFormConnect.bookingFormId;
   const isWidgetConfigured = Boolean(
-    bookingFormId && !bookingFormId.includes("placeholder")
+    BOOKING_FORM_ID && !BOOKING_FORM_ID.includes("placeholder")
   );
 
   useEffect(() => {
@@ -17,28 +32,15 @@ export default function BookingSection() {
       return;
     }
 
-    // Inject widget styles if configured
-    if (siteConfig.myFormConnect.widgetCssUrl) {
-      const existingLink = document.querySelector(
-        `link[href="${siteConfig.myFormConnect.widgetCssUrl}"]`
-      );
-      if (!existingLink) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = siteConfig.myFormConnect.widgetCssUrl;
-        document.head.appendChild(link);
-      }
-    }
-
     // Load scheduling script
-    if (siteConfig.myFormConnect.widgetJsUrl) {
+    if (WIDGET_JS_URL) {
       const existingScript = document.querySelector(
-        `script[src="${siteConfig.myFormConnect.widgetJsUrl}"]`
+        `script[src="${WIDGET_JS_URL}"]`
       );
 
       if (!existingScript) {
         const script = document.createElement("script");
-        script.src = siteConfig.myFormConnect.widgetJsUrl;
+        script.src = WIDGET_JS_URL;
         script.async = true;
         script.onload = () => {
           setWidgetLoaded(true);
@@ -47,9 +49,9 @@ export default function BookingSection() {
             try {
               window.MyFormConnect.init({
                 container: "#myformconnect-booking-container",
-                formId: bookingFormId,
-                title: siteConfig.myFormConnect.meetingTitle,
-                duration: siteConfig.myFormConnect.meetingDuration,
+                formId: BOOKING_FORM_ID,
+                title: MEETING_TITLE,
+                duration: MEETING_DURATION,
               });
             } catch (err) {
               console.warn("MyFormConnect initialization notice:", err);
@@ -64,7 +66,7 @@ export default function BookingSection() {
         setWidgetLoaded(true);
       }
     }
-  }, [isWidgetConfigured, bookingFormId]);
+  }, [isWidgetConfigured]);
 
   return (
     <section id="booking" className="section" aria-labelledby="booking-heading">
@@ -84,10 +86,10 @@ export default function BookingSection() {
           {/* Meeting details */}
           <div className="booking-header">
             <h3 className="serif-headline serif-h3">
-              {siteConfig.myFormConnect.meetingTitle}
+              {MEETING_TITLE}
             </h3>
             <p style={{ marginTop: "0.5rem", color: "var(--color-text-secondary)", fontSize: "0.95rem" }}>
-              {siteConfig.myFormConnect.description}
+              {MEETING_DESCRIPTION}
             </p>
 
             <div className="booking-meta-badges">
@@ -96,7 +98,7 @@ export default function BookingSection() {
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
-                <span>{siteConfig.myFormConnect.meetingDuration} Minutes</span>
+                <span>{MEETING_DURATION} Minutes</span>
               </span>
 
               <span className="meta-badge">
@@ -123,15 +125,15 @@ export default function BookingSection() {
               loadError ? (
                 <div className="notice-box notice-error" style={{ width: "100%" }}>
                   <p>
-                    Unable to load the MyFormConnect scheduling widget at this moment. Please use the direct inquiry form above or reach out to us at {siteConfig.brand.contact.emailPlaceholder}.
+                    Unable to load the MyFormConnect scheduling widget at this moment. Please use the direct inquiry form above or reach out to us at {CONCIERGE_EMAIL}.
                   </p>
                 </div>
               ) : (
                 <div
                   id="myformconnect-booking-container"
-                  data-booking-id={bookingFormId}
-                  data-title={siteConfig.myFormConnect.meetingTitle}
-                  data-duration={siteConfig.myFormConnect.meetingDuration}
+                  data-booking-id={BOOKING_FORM_ID}
+                  data-title={MEETING_TITLE}
+                  data-duration={MEETING_DURATION}
                   data-theme="royal-luxury"
                   style={{ width: "100%", minHeight: "460px" }}
                 >

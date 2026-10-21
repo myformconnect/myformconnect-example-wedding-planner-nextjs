@@ -1,7 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/lib/siteConfig";
+
+// Form submission endpoint — works with or without environment variables
+const ENQUIRY_FORM_ENDPOINT =
+  process.env.NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT ||
+  "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
+
+// Celebration styles
+const WEDDING_TYPES = [
+  { label: "Select celebration style...", value: "" },
+  { label: "Royal Indian Palace Wedding", value: "Royal Indian Palace Wedding" },
+  { label: "Western / Contemporary Elegance", value: "Western / Contemporary Elegance" },
+  { label: "Luxury Destination (Beach / Island / International)", value: "Luxury Destination" },
+  { label: "Intimate Bespoke Gathering (Under 100)", value: "Intimate Bespoke Gathering" },
+  { label: "Multi-Cultural / Fusion Celebration", value: "Multi-Cultural / Fusion" },
+  { label: "Other / Custom Vision", value: "Other / Custom Vision" },
+];
+
+// Guest count options
+const GUEST_COUNTS = [
+  { label: "Select estimated guest count...", value: "" },
+  { label: "Under 50 guests (Intimate)", value: "Under 50" },
+  { label: "50–120 guests", value: "50-120" },
+  { label: "120–250 guests", value: "120-250" },
+  { label: "250–500 guests (Grand Celebration)", value: "250-500" },
+  { label: "500+ guests (Royal Scale)", value: "500+" },
+  { label: "Not decided yet", value: "Not decided" },
+];
+
+// Budget bands
+const BUDGET_BANDS = [
+  { label: "Select approximate investment tier...", value: "" },
+  { label: "Tier 1: Intimate & Curated (₹25L – ₹50L / $30K – $60K)", value: "Tier 1: Intimate & Curated" },
+  { label: "Tier 2: Classic Heritage Celebration (₹50L – ₹1.2Cr / $60K – $150K)", value: "Tier 2: Classic Heritage" },
+  { label: "Tier 3: Grand Multi-Day Royal Celebration (₹1.2Cr – ₹3Cr / $150K – $350K)", value: "Tier 3: Grand Royal" },
+  { label: "Tier 4: Ultra-Luxury Bespoke Production (₹3Cr+ / $350K+)", value: "Tier 4: Ultra-Luxury" },
+  { label: "Custom consultation / Undisclosed", value: "Custom consultation" },
+];
 
 export default function EnquiryForm() {
   const [formData, setFormData] = useState({
@@ -87,11 +123,7 @@ export default function EnquiryForm() {
       const formPayload = new FormData(formElement);
       formPayload.set("form_source", "bespoke-enquiry-form");
 
-      const endpoint =
-        siteConfig.myFormCapture.endpoint ||
-        "https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd";
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(ENQUIRY_FORM_ENDPOINT, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -259,7 +291,7 @@ export default function EnquiryForm() {
                     className={`form-input form-select ${errors.weddingType ? "input-error" : ""}`}
                     required
                   >
-                    {siteConfig.formOptions.weddingTypes.map((option) => (
+                    {WEDDING_TYPES.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
@@ -314,7 +346,7 @@ export default function EnquiryForm() {
                     onChange={handleChange}
                     className="form-input form-select"
                   >
-                    {siteConfig.formOptions.guestCounts.map((option) => (
+                    {GUEST_COUNTS.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
@@ -334,7 +366,7 @@ export default function EnquiryForm() {
                     onChange={handleChange}
                     className="form-input form-select"
                   >
-                    {siteConfig.formOptions.budgetBands.map((option) => (
+                    {BUDGET_BANDS.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
