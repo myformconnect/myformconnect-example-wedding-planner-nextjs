@@ -50,6 +50,9 @@ export default function BookingWidget({
 
   return (
     <div className="w-full booking-widget-wrapper">
+      {/* Remote widget base CSS from host */}
+      <link rel="stylesheet" href={`${apiBase}/booking-widget.css`} />
+
       {/* Widget script */}
       <Script
         src={`${apiBase}/booking-widget.js`}
