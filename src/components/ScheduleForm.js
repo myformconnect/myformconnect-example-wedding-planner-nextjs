@@ -8,41 +8,41 @@ const SCHEDULING_FORM_URL =
   process.env.NEXT_PUBLIC_MFC_DEMO_URL ||
   "https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658";
 
-// Consultation types options
-const CONSULTATION_TYPES = [
+// Distinct consultation formats
+const CONSULTATION_FORMATS = [
   {
-    id: "virtual-15",
-    title: "15-Min Quick Discovery Call",
-    duration: "15 Min",
-    subtitle: "Instant date check, budget feasibility & vision alignment",
+    id: "virtual-presentation",
+    title: "Virtual Design Presentation",
+    badge: "Video Call • 30 Min",
+    subtitle: "Screen-share 3D palace layouts, moodboards & live date availability via Google Meet / Zoom",
   },
   {
-    id: "virtual-30",
-    title: "30-Min Wedding Strategy Session",
-    duration: "30 Min",
-    subtitle: "Venue recommendations, real cost breakdown & timelines",
+    id: "concierge-call",
+    title: "Direct Concierge Call",
+    badge: "Phone / WhatsApp • 15 Min",
+    subtitle: "Quick audio consultation for immediate date confirmation, venue feasibility & ballpark costs",
   },
   {
-    id: "studio-inperson",
-    title: "Private Studio Meeting",
-    duration: "45 Min",
-    subtitle: "In-person consultation at our Jaipur or Delhi design atelier",
+    id: "atelier-visit",
+    title: "Private Atelier Appointment",
+    badge: "In-Person • 45 Min",
+    subtitle: "Meet at our Jaipur or Delhi design studio to review physical fabric swatches & lookbooks",
   },
 ];
 
-// Available start time slots
+// Available start time windows
 const CONSULTATION_TIMES = [
-  "10:00 AM – 10:30 AM",
-  "11:30 AM – 12:00 PM",
-  "02:00 PM – 02:30 PM",
-  "04:00 PM – 04:30 PM",
-  "06:30 PM – 07:00 PM",
-  "08:00 PM – 08:30 PM",
+  "10:00 AM – 11:00 AM",
+  "11:30 AM – 12:30 PM",
+  "02:00 PM – 03:00 PM",
+  "04:30 PM – 05:30 PM",
+  "06:30 PM – 07:30 PM",
+  "08:00 PM – 09:00 PM",
 ];
 
 export default function ScheduleForm() {
   const [activeTab, setActiveTab] = useState("calendar"); // 'calendar' | 'direct'
-  const [selectedType, setSelectedType] = useState(CONSULTATION_TYPES[0].id);
+  const [selectedFormat, setSelectedFormat] = useState(CONSULTATION_FORMATS[0].id);
   const [selectedDate, setSelectedDate] = useState(() => {
     // Default to 3 days out
     const d = new Date();
@@ -78,7 +78,7 @@ export default function ScheduleForm() {
       errs.phone = "Please enter your WhatsApp or contact number.";
     }
     if (!selectedTime) {
-      errs.time = "Please select a consultation time slot.";
+      errs.time = "Please select a preferred consultation time window.";
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -107,7 +107,7 @@ export default function ScheduleForm() {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    const chosenTypeObj = CONSULTATION_TYPES.find((t) => t.id === selectedType);
+    const chosenFormatObj = CONSULTATION_FORMATS.find((f) => f.id === selectedFormat);
 
     try {
       // Submit as FormData
@@ -120,10 +120,16 @@ export default function ScheduleForm() {
       formPayload.set("phone", formData.phone.trim());
       formPayload.set("preferred_date", selectedDate);
       formPayload.set("preferred_time", selectedTime);
-      formPayload.set("duration", chosenTypeObj ? chosenTypeObj.duration : "15 minutes");
-      formPayload.set("service_type", chosenTypeObj ? chosenTypeObj.title : "Wedding Strategy Session");
-      formPayload.set("location_preference", formData.destinationOrCity.trim() || "Virtual Video Call");
-      formPayload.set("custom_message", `Destination/City: ${formData.destinationOrCity} | Notes: ${formData.notes}`);
+      formPayload.set("service_type", chosenFormatObj ? chosenFormatObj.title : "Virtual Design Presentation");
+      formPayload.set("duration", chosenFormatObj ? chosenFormatObj.badge : "30 Min");
+      formPayload.set(
+        "location_preference",
+        formData.destinationOrCity.trim() || "Virtual Video Call"
+      );
+      formPayload.set(
+        "custom_message",
+        `Format: ${chosenFormatObj?.title} | Preferred Time: ${selectedTime} | Destinations: ${formData.destinationOrCity || "Not specified"} | Notes: ${formData.notes || "None"}`
+      );
 
       const response = await fetch(SCHEDULING_FORM_URL, {
         method: "POST",
@@ -139,23 +145,25 @@ export default function ScheduleForm() {
       }
 
       setConfirmedDetails({
-        type: chosenTypeObj ? chosenTypeObj.title : "Wedding Strategy Session",
+        format: chosenFormatObj ? chosenFormatObj.title : "Virtual Design Presentation",
         date: selectedDate,
         time: selectedTime,
         couple: formData.coupleNames,
         email: formData.email,
         phone: formData.phone,
+        destination: formData.destinationOrCity || "Virtual Meeting",
       });
       setBookingConfirmed(true);
     } catch (err) {
       console.warn("Booking notice:", err);
       setConfirmedDetails({
-        type: chosenTypeObj ? chosenTypeObj.title : "Wedding Strategy Session",
+        format: chosenFormatObj ? chosenFormatObj.title : "Virtual Design Presentation",
         date: selectedDate,
         time: selectedTime,
         couple: formData.coupleNames,
         email: formData.email,
         phone: formData.phone,
+        destination: formData.destinationOrCity || "Virtual Meeting",
       });
       setBookingConfirmed(true);
     } finally {
@@ -195,13 +203,13 @@ export default function ScheduleForm() {
               </h3>
 
               <p className="confirmed-subtext">
-                Your consultation has been registered on our scheduling system. A calendar invitation and private meeting link have been prepared for <strong>{confirmedDetails?.email}</strong>.
+                Your private consultation has been registered on our scheduling system. A calendar invitation and private meeting link have been prepared for <strong>{confirmedDetails?.email}</strong>.
               </p>
 
               <div className="confirmed-summary-card">
                 <div className="summary-row">
-                  <span className="summary-label">Session:</span>
-                  <span className="summary-value">{confirmedDetails?.type}</span>
+                  <span className="summary-label">Format:</span>
+                  <span className="summary-value">{confirmedDetails?.format}</span>
                 </div>
                 <div className="summary-row">
                   <span className="summary-label">Date:</span>
@@ -215,7 +223,7 @@ export default function ScheduleForm() {
                   </span>
                 </div>
                 <div className="summary-row">
-                  <span className="summary-label">Time Slot:</span>
+                  <span className="summary-label">Time Window:</span>
                   <span className="summary-value">{confirmedDetails?.time}</span>
                 </div>
                 <div className="summary-row">
@@ -253,7 +261,7 @@ export default function ScheduleForm() {
               </h2>
               <div className="divider-gold" aria-hidden="true" />
               <p className="schedule-pane-description">
-                Schedule a complimentary 15-minute discovery call with our Senior Wedding Director. We will check 2026–2027 venue dates, discuss realistic budgets, and share initial decor concepts tailored to your dream setting.
+                Schedule a 1-on-1 strategy call with our Senior Wedding Director. We will check 2026–2027 venue dates, discuss realistic budgets, and share initial decor concepts tailored to your dream setting.
               </p>
 
               {/* Guarantees & perks */}
@@ -334,7 +342,7 @@ export default function ScheduleForm() {
                     <polyline points="9 11 12 14 22 4" />
                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                   </svg>
-                  <span>Direct Date Reservation</span>
+                  <span>Direct Appointment Booking</span>
                 </button>
               </div>
 
@@ -360,29 +368,41 @@ export default function ScheduleForm() {
                     autoComplete="off"
                   />
 
-                  {/* Step 1: Consultation type */}
+                  {/* Informational intro card */}
+                  <div className="direct-reservation-intro">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="16" x2="12" y2="12" />
+                      <line x1="12" y1="8" x2="12.01" y2="8" />
+                    </svg>
+                    <div>
+                      <strong>Direct Concierge Booking:</strong> Select your preferred meeting format below—a virtual video conference, a direct phone/WhatsApp call, or an in-person atelier visit. We will lock in your time and send meeting coordinates directly.
+                    </div>
+                  </div>
+
+                  {/* Step 1: Consultation format */}
                   <div className="schedule-step-block">
                     <div className="step-label-row">
                       <span className="step-number" aria-hidden="true">1</span>
-                      <h3 className="step-title">Select Consultation Type</h3>
+                      <h3 className="step-title">Choose Consultation Format</h3>
                     </div>
 
                     <div className="consultation-types-grid">
-                      {CONSULTATION_TYPES.map((type) => {
-                        const isSelected = selectedType === type.id;
+                      {CONSULTATION_FORMATS.map((format) => {
+                        const isSelected = selectedFormat === format.id;
                         return (
                           <button
-                            key={type.id}
+                            key={format.id}
                             type="button"
-                            onClick={() => setSelectedType(type.id)}
+                            onClick={() => setSelectedFormat(format.id)}
                             className={`type-card-btn ${isSelected ? "selected" : ""}`}
                             aria-pressed={isSelected}
                           >
                             <div className="type-header">
-                              <span className="type-title">{type.title}</span>
-                              <span className="type-duration-badge">{type.duration}</span>
+                              <span className="type-title">{format.title}</span>
+                              <span className="type-duration-badge">{format.badge}</span>
                             </div>
-                            <p className="type-subtitle">{type.subtitle}</p>
+                            <p className="type-subtitle">{format.subtitle}</p>
                           </button>
                         );
                       })}
@@ -393,7 +413,7 @@ export default function ScheduleForm() {
                   <div className="schedule-step-block">
                     <div className="step-label-row">
                       <span className="step-number" aria-hidden="true">2</span>
-                      <h3 className="step-title">Select Date &amp; Available Slot</h3>
+                      <h3 className="step-title">Select Date &amp; Convenient Time Window</h3>
                     </div>
 
                     <div className="datetime-selection-row">
@@ -407,15 +427,30 @@ export default function ScheduleForm() {
                           name="preferred_date"
                           value={selectedDate}
                           min={new Date().toISOString().split("T")[0]}
-                          onChange={(e) => setSelectedDate(e.target.value)}
-                          className="form-input form-date-input"
+                          onChange={(e) => {
+                            setSelectedDate(e.target.value);
+                            if (errors.date) {
+                              setErrors((prev) => {
+                                const next = { ...prev };
+                                delete next.date;
+                                return next;
+                              });
+                            }
+                          }}
+                          className={`form-input form-date-input ${errors.date ? "input-error" : ""}`}
                           required
                         />
+                        <span className="schedule-date-helper">
+                          Select any upcoming date for your consultation
+                        </span>
+                        {errors.date && (
+                          <span className="field-error-msg">{errors.date}</span>
+                        )}
                       </div>
 
                       <div>
                         <div className="schedule-input-label">
-                          Available Start Times (IST) <span className="req">*</span>
+                          Preferred Time Window (IST) <span className="req">*</span>
                         </div>
                         <div className="slots-grid">
                           {CONSULTATION_TIMES.map((time) => {
@@ -451,11 +486,11 @@ export default function ScheduleForm() {
                     </div>
                   </div>
 
-                  {/* Step 3: Contact info */}
+                  {/* Step 3: Contact coordinates */}
                   <div className="schedule-step-block" style={{ borderBottom: "none", marginBottom: 0, paddingBottom: 0 }}>
                     <div className="step-label-row">
                       <span className="step-number" aria-hidden="true">3</span>
-                      <h3 className="step-title">Your Details</h3>
+                      <h3 className="step-title">Your Contact Coordinates</h3>
                     </div>
 
                     <div className="schedule-fields-grid">
@@ -518,7 +553,7 @@ export default function ScheduleForm() {
 
                       <div className="form-field-wrapper">
                         <label htmlFor="scheduleCity" className="schedule-input-label">
-                          Dream Destination or City
+                          Destination or Palaces of Interest
                         </label>
                         <input
                           id="scheduleCity"
@@ -539,10 +574,10 @@ export default function ScheduleForm() {
                         className="btn btn-primary schedule-submit-btn"
                       >
                         {isSubmitting ? (
-                          "Reserving On Staging Server..."
+                          "Confirming Consultation..."
                         ) : (
                           <>
-                            Confirm 1:1 Consultation Date &rarr;
+                            Reserve Consultation Slot &rarr;
                           </>
                         )}
                       </button>
@@ -551,7 +586,7 @@ export default function ScheduleForm() {
                           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        <span>Direct Staging Server Integration &bull; 100% Confidential</span>
+                        <span>Direct Staging Server Integration &bull; 100% Confidential Atelier Coordination</span>
                       </div>
                     </div>
                   </div>

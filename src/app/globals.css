@@ -487,6 +487,7 @@ button, input, select, textarea {
   right: 0;
   bottom: 0;
   z-index: 1;
+  overflow: hidden;
 }
 
 .hero-bg-media img {
@@ -494,7 +495,8 @@ button, input, select, textarea {
   height: 100%;
   object-fit: cover;
   object-position: center 35%;
-  filter: brightness(0.85);
+  filter: brightness(0.82) blur(3.5px);
+  transform: scale(1.04);
 }
 
 .hero-overlay {
@@ -530,20 +532,25 @@ button, input, select, textarea {
 
 .hero-title {
   color: #FFFDF9;
+  font-family: var(--font-serif);
+  font-weight: 700;
   font-size: clamp(2.6rem, 5.2vw, 4.6rem);
-  line-height: 1.12;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
   max-width: 1100px;
   margin-bottom: 1.5rem;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.65), 0 4px 36px rgba(0, 0, 0, 0.4);
 }
 
 .hero-subtitle {
-  font-size: clamp(1.1rem, 1.45vw, 1.35rem);
+  font-family: var(--font-sans);
+  font-size: clamp(1.08rem, 1.4vw, 1.32rem);
+  font-weight: 500;
   line-height: 1.75;
-  color: rgba(255, 253, 249, 0.92);
+  color: rgba(255, 253, 249, 0.96);
   margin-bottom: 2.75rem;
-  max-width: 900px;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  max-width: 920px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
 }
 
 .hero-actions {
@@ -1880,6 +1887,38 @@ button, input, select, textarea {
 .turnkey-widget-container {
   width: 100%;
   min-height: 480px;
+}
+
+.direct-reservation-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  background-color: rgba(166, 138, 85, 0.08);
+  border: 1px solid rgba(166, 138, 85, 0.22);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.direct-reservation-intro svg {
+  color: var(--color-accent);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.direct-reservation-intro strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.schedule-date-helper {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.45rem;
 }
 
 .schedule-step-block {
