@@ -2,9 +2,9 @@
 
 A clean, responsive luxury wedding atelier landing page built with **Next.js 16 (App Router)** and **React 19**. 
 
-This repository serves as a reference implementation for integrating:
-- **[MyFormCapture](https://myformcapture.com)** — Headless lead capture (inquiry form, exit-intent modal, and newsletter).
-- **[MyFormConnect](https://myformcapture.com)** — Embedded 15-minute consultation booking widget.
+This repository serves as a reference implementation for integrating **[MyFormConnect](https://myformcapture.com)**:
+- **Headless Lead Capture** — Custom inquiry form, exit-intent guide download modal, and newsletter subscriptions.
+- **Embedded Scheduling & Booking** — Interactive 15-minute consultation booking calendar widget.
 
 ---
 
@@ -33,11 +33,11 @@ Copy `.env.example` to `.env.local`. All variables use the `NEXT_PUBLIC_` prefix
 # Site URL for SEO & preview cards
 NEXT_PUBLIC_SITE_URL=https://aurelleweddings.vercel.app
 
-# FormCapture (inquiries, guide download, newsletter)
+# MyFormConnect endpoint (inquiries, guide download, newsletter)
 NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT=https://myformcapture.com/f/95dcab67-a579-4a81-9f23-e005ff8204fd
 NEXT_PUBLIC_MYFORMCAPTURE_FORM_ID=95dcab67-a579-4a81-9f23-e005ff8204fd
 
-# Consultation calendar (MyFormConnect)
+# Consultation calendar (booking widget)
 NEXT_PUBLIC_MFC_DEMO_URL=https://staging.myformcapture.com/f/6506e87c-d573-497a-84c3-7a407b395658
 NEXT_PUBLIC_MYFORMCONNECT_BOOKING_FORM_ID=6506e87c-d573-497a-84c3-7a407b395658
 NEXT_PUBLIC_MYFORMCONNECT_WIDGET_JS_URL=https://staging.myformcapture.com/booking-widget.js
@@ -76,7 +76,7 @@ Most text, pricing packages, contact placeholders, and navigation links live in 
 ### 2. Customizing Forms & Webhooks
 - **Enquiry Form (`EnquiryForm.js`)**: Captures client inquiries (budget, guest count, dates). Submits payload to `NEXT_PUBLIC_MYFORMCAPTURE_ENDPOINT`.
 - **Booking Widget (`BookingWidget.js` / `ScheduleForm.js`)**: Dynamically loads the MyFormConnect scheduling script into `#myformconnect-booking-container`.
-- **Exit-Intent & Newsletter (`ExitIntentModal.js`, `NewsletterSection.js`)**: Reusable lead magnets that submit to MyFormCapture with custom hidden source tags.
+- **Exit-Intent & Newsletter (`ExitIntentModal.js`, `NewsletterSection.js`)**: Reusable lead magnets that submit to MyFormConnect with custom hidden source tags.
 
 ### 3. Replacing Photos
 Images live in `public/images/`. Drop in your own photos with matching names, or update image paths directly in [`src/lib/siteConfig.js`](file:///d:/Work2/myformconnect-example-wedding-planner-nextjs/src/lib/siteConfig.js).
